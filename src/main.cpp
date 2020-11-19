@@ -32,8 +32,6 @@ int main(int argc, char *argv[])
 
 	std::cout <<  std::endl;
 	std::cout << "Teste retorno insert: initializer list: " << *x << std::endl;
-
-	x = lista.insert(lista.begin(),lista.begin()+2,lista.end());
 	
 	std::cout << "Teste insert [first,last) " << std::endl;
 	print_list(lista);

@@ -1,3 +1,14 @@
+/**
+ * @file linkedList.hpp
+ * @author Samir Rodrigues & Italo Lima (git @SamirRodrigues & @italo-ce)
+ * @brief 
+ * @version 0.1
+ * @date 2020-11-18
+ * 
+ * @copyright Copyright (c) 2020
+ * 
+ */
+
 #ifndef LIST_H_
 #define LIST_H_
 #include <iostream>
@@ -9,9 +20,9 @@ using size_type = size_t;
 
 namespace ls
 {
-
 	template <typename T>
-	class list{
+	class list
+	{
 		private:
 		struct Node {
 			T data;
@@ -36,6 +47,7 @@ namespace ls
 				const_iterator operator ++ ( int ); 	// it++;
 				const_iterator & operator -- ( ); 		// --it;
 				const_iterator operator -- ( int ); 	// it--;
+				const_iterator & operator- (int );
 				bool operator == ( const const_iterator & rhs ) const;
 				bool operator != ( const const_iterator & rhs ) const;
 			
@@ -54,8 +66,10 @@ namespace ls
 			
 				iterator & operator++ ();
 				iterator operator++ (int);
+				iterator  operator+ (int);
 				iterator & operator-- ();
 				iterator operator-- (int);
+				iterator  operator- (int );
 		
 			protected :
 				iterator( Node *p ) : const_iterator( p ){}
@@ -65,11 +79,13 @@ namespace ls
 		// [I] SPECIAL MEMBERS
 
 		list(void);
-		~list( );	
-		list( std::initializer_list<T> ilist );
 		explicit list(size_type count);		
+		list(InputIt first, InputIt last);
 		list( const list& );				
-		list & operator= ( const list & );		 
+		list( std::initializer_list<T> ilist );
+		~list( );	
+		list & operator= ( const list & );
+		list & operator= ( std::initializer_list<T> ilist );		 
 		
 		// [II] ITERATORS
 	
@@ -107,14 +123,12 @@ namespace ls
 		iterator insert(iterator pos, InItr first, InItr last);	
 		iterator erase( iterator pos );
 		iterator erase( iterator first, iterator last );
-
-		const_iterator find( const T & value ) const;
 		
-};
-	template <typename T>
-	bool operator==(const list<T>& lhs,const list<T>& rhs);
-	template <typename T>
-	bool operator!=(const list<T>& lhs,const list<T>& rhs);
+		template <typename T>
+		bool operator==(const list<T>& lhs,const list<T>& rhs);
+		template <typename T>
+		bool operator!=(const list<T>& lhs,const list<T>& rhs);
+	};
 
 }
 
