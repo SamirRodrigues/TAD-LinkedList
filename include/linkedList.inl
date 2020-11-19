@@ -1,450 +1,558 @@
 #include "linkedList.hpp"
 
 namespace ls
-{  
-    // TODO: Make const_iterator a real const_iterator
-	template <class T>
-	const T &list<T>::const_iterator::operator*() const
-	{
-		return this->current->data;
-	}
+{	
+	// I SPECIAL MEMBERS
 
-	template <class T>
-	typename list<T>::const_iterator &list<T>::const_iterator::operator++()
-	{
-		this->current = this->current->next;
-		return *this;
-	}
-	template <class T>
-	typename list<T>::const_iterator list<T>::const_iterator::operator++( value_type )
-	{
-		auto copy = *this;
-		this->current = this->current->next;
-		return copy;
-	}
+	
+	/**
+	 * @brief Construct a new list<T>::list object
+	 * 
+	 * @tparam T 
+	 */
+	template <typename T>
+		list<T>::list(void){
 
-	template <class T>
-	typename list<T>::const_iterator &list<T>::const_iterator::operator--()
-	{
-		this->current = this->current->prev;
-		return *this;
-	}
-
-	template <class T>
-	typename list<T>::const_iterator list<T>::const_iterator::operator--( value_type )
-	{
-		auto copy = *this;
-		this->current = this->current->prev;
-		return copy;
-	}
-
-	template <class T>
-	typename list<T>::const_iterator &list<T>::const_iterator::operator+( value_type add )
-	{
-		for( int i = 0; i < add; ++i ){
-			if( this->current == nullptr ){
-				// TODO: Throw exp
-			}
-			this->current = this->current->next;
+			length = 0;
+			head = new Node();
+			tail = new Node();
+			head->next = tail;
+			tail->prev = head;
 		}
-		return *this;
-	}
 
-	template <class T>
-	typename list<T>::const_iterator &list<T>::const_iterator::operator-( value_type sub )
-	{
-		for( int i = 0; i < sub; ++i ){
-			if( this->current == nullptr ){
-				// TODO: Throw exp
-			}
-			this->current = this->current->prev;
+	/**
+	 * @brief Construct a new list<T>::list object
+	 * 
+	 * @tparam T 
+	 * @param ilist 
+	 */
+	template <typename T>
+		list<T>::list( std::initializer_list<T> ilist ): list<T>::list()
+		{
+			insert(begin(),ilist.begin(),ilist.end());
 		}
-		return *this;
-	}
 
-	template <class T>
-	bool list<T>::const_iterator::operator==( const const_iterator &rhs ) const
-	{
-		return this->current == rhs.current;
-	}
-
-	template <class T>
-	bool list<T>::const_iterator::operator!=( const const_iterator &rhs ) const
-	{
-		return this->current != rhs.current;
-	}
-	template <class T>
-	T &list<T>::iterator::operator*()
-	{
-		return this->current->data;
-	}
-
-	template <class T>
-	typename list<T>::iterator &list<T>::iterator::operator++()
-	{
-		this->current = this->current->next;
-		return *this;
-	}
-
-	template <class T>
-	typename list<T>::iterator list<T>::iterator::operator++( value_type )
-	{
-		auto copy = *this;
-		this->current = this->current->next;
-		return copy;
-	}
-
-	template <class T>
-	typename list<T>::iterator &list<T>::iterator::operator--()
-	{
-		this->current = this->current->prev;
-		return *this;
-	}
-
-	template <class T>
-	typename list<T>::iterator list<T>::iterator::operator--( value_type )
-	{
-		auto copy = *this;
-		this->current = this->current->prev;
-		return copy;
-	}
-
-	template <class T>
-	typename list<T>::iterator &list<T>::iterator::operator+( value_type add )
-	{
-		for( int i = 0; i < add; ++i ){
-			if( this->current == nullptr ){
-				// TODO: Throw exp
-			}
-			this->current = this->current->next;
+	/**
+	 * @brief Construct a new list<T>::list object
+	 * 
+	 * @tparam T 
+	 * @param count 
+	 */
+	template <typename T>
+		list<T>::list(size_type count): list<T>::list() 
+		{
+			assign(count,0);	
 		}
-		return *this;
-	}
+	
+	/**
+	 * @brief Construct a new list<T>::list object
+	 * 
+	 * @tparam T 
+	 * @param other 
+	 */
+	template <typename T>
+	list<T>::list( const list<T> & other ): list<T>::list()
+	{
+		*this = other;
+	} 
+	
+	/**
+	 * @brief Operator=
+	 * 
+	 * @tparam T 
+	 * @param other 
+	 * @return list<T>& 
+	 */
+	template <typename T>
+	list<T>& list<T>::operator= ( const list<T> & other )
+	{			
+		assign(other.cbegin(),other.cend());
 
-	template <class T>
-	typename list<T>::iterator &list<T>::iterator::operator-( value_type sub )
-	{
-		for( int i = 0; i < sub; ++i ){
-			if( this->current == nullptr ){
-				// TODO: Throw exp
-			}
-			this->current = this->current->prev;
-		}
-		return *this;
-	}
-
-	template <class T>
-	bool list<T>::iterator::operator==( const iterator &rhs ) const
-	{
-		return this->current == rhs.current;
-	}
-
-	template <class T>
-	bool list<T>::iterator::operator!=( const iterator &rhs ) const
-	{
-		return this->current != rhs.current;
-	}
-
-//=============================================================================
-
-	template <class T>
-	typename list<T>::iterator list<T>::begin()
-	{
-		return list<T>::iterator(this->head->next);
-	}
-		
-	template <class T>
-	typename list<T>::iterator list<T>::end()
-	{
-		return list<T>::iterator(this->tail);
-	}
-		
-	template <class T>
-	typename list<T>::const_iterator list<T>::cbegin() const
-	{
-		return list<T>::const_iterator(this->head->next);
-	}
-		
-	template <class T>
-	typename list<T>::const_iterator list<T>::cend() const
-	{
-		
-		return list<T>::const_iterator(this->tail);
-	}
-	template <class T>
-	void list<T>::init()
-	{
-		this->length = 0;
-		this->head = new Node();
-		this->tail = new Node();
-		this->head->next = tail;
-		this->tail->prev = head;
-	 }
-
-	template <class T>
-	list<T>::list()
-	{
-		init();
+		return *this;	
 	}
 	
-	template <class T>
-	list<T>::list( size_type count )
-	{
-		init();
-		for( auto i = 0; i < count; i++ ){
-			push_back(0);
-		}
-	}
-	
-	template <class T>
-	template <class InitIt>
-	list<T>::list( InitIt first, InitIt last )
-	{
-		init();
-		insert( begin(), first, last );
-	}
-	
-	template <class T>
-	list<T>::list( const list &other )
-	{
-		init();
-		for( auto i = other.cbegin(); i != other.cend(); i++ ){
-			push_back(*i);
-		}
-	}
-	
-	template <class T>
-	list<T>::list( std::initializer_list<T> ilist )
-	{
-		init();
-		for( auto &i : ilist ){
-			push_back(i);
-		}
-	}
-	
-	template <class T>
+	/**
+	 * @brief Destroy the list<T>::list object
+	 * 
+	 * @tparam T 
+	 */
+	template <typename T>
 	list<T>::~list()
 	{
-		Node *temp = this->head;	
-		while( temp != this->tail ){
-			temp = temp->next;
-			if(temp->prev != this->head){
-				delete temp->prev;
-			}
-		}
+		clear();
+		delete head;
+		delete tail;
+	}
 
-		delete this->head;
-		delete this->tail;
+	// [II] ITERATORS 
+
+	/**
+	 * @brief Returns a iterator to the beginning of the list 
+	 * 
+	 * @tparam T 
+	 * @return ls::list<T>::iterator 
+	 */
+	template <typename T>
+	typename ls::list<T>::iterator ls::list<T>::begin()
+	{
+		return ls::list<T>::iterator(head->next);
+	}
+
+	/**
+	 * @brief Returns a constant iterator to the beginning of the list 
+	 * 
+	 * @tparam T 
+	 * @return ls::list<T>::const_iterator 
+	 */
+	template <typename T>
+	typename ls::list<T>::const_iterator ls::list<T>::begin() const
+	{
+		return ls::list<T>::const_iterator(head->next);
+	}
+
+	/**
+	 * @brief Returns a iterator to the end of the list
+	 * 
+	 * @tparam T 
+	 * @return ls::list<T>::iterator 
+	 */
+	template <typename T>
+	typename ls::list<T>::iterator ls::list<T>::end()
+	{
+		return ls::list<T>::iterator(tail);
+	}
+
+	/**
+	 * @brief Returns a constant iterator to the end of the list
+	 * 
+	 * @tparam T 
+	 * @return ls::list<T>::const_iterator 
+	 */
+	template <typename T>
+	typename ls::list<T>::const_iterator ls::list<T>::end() const
+	{
+		return ls::list<T>::const_iterator(tail);
+	}
+
+	/**
+	 * @brief Returns a reference to the object in the position who iterator points
+	 * 
+	 * @tparam T 
+	 * @return const T& 
+	 */
+	template <typename T>		
+	const T & list<T>::const_iterator::operator* ( ) const{
+		return this->current->data;
+	}	
+	
+
+	/**
+	 * @brief Increase the iterator to the next position in list (++it)
+	 * 
+	 * @tparam T 
+	 * @return list<T>::const_iterator& 
+	 */
+	template <typename T>		
+	typename list<T>::const_iterator & list<T>::const_iterator::operator++ ( ){// ++it;
+	
+		this->current = this->current->next;
+		return *this;
 	}
 	
-	template <class T>
-	list<T> &list<T>::operator=( const list &other )
-	{
-		if( this->length != 0 ){
-			clear();
-			init();
-		}
+	/*! @brief Increase the iterator to the next position in list (it++)
+	 *	@return The iterator
+	 */
 
-		for( auto i = other.cbegin(); i != other.cend(); i++ ){
-			push_back(*i);
-		}
+	template <typename T>		
+	typename list<T>::const_iterator list<T>::const_iterator::operator++ ( int ){ // it++;
+	
+		auto temp = *this;	
+		this->current = this->current->next;
+		return *temp;
+	}
 
+	/*! @brief Decrease the iterator to the prev position in list (--it)
+	 *	@return The iterator
+	 */
+
+	template <typename T>
+	typename list<T>::const_iterator list<T>::const_iterator::operator--( int ){
+		auto temp = *this;
+		this->current = this->current->prev;
+
+		if (this->current == nullptr){
+			throw std::out_of_range("Iterator went out of bounds!");
+		}
+		return temp;
+	}
+	
+	/*! @brief Decrease the iterator to the prev position in list (it--)
+	 *	@return The iterator
+	 */
+
+	template <typename T>
+	typename list<T>::const_iterator & list<T>::const_iterator::operator--( ){
+		this->current = this->current->prev;
+
+		if (this->current == nullptr){
+			throw std::out_of_range("Iterator went out of bounds!");
+		}
 		return *this;
 	}
 
-	template <class T>
-	list<T> &list<T>::operator=( std::initializer_list<T> ilist ){
-		if( this->length != 0 )
-		{
-			clear();
-			init();
+	// [III] CAPACITY - DONE
+
+	/*! @brief Return the number of elements in the list
+	 *	@return The number of elements in the list	
+	 */
+
+	template <typename T>
+		size_type list<T>::size() const {
+			return length;
 		}
 
-		for( auto &i : ilist )
-		{
-			push_back(i);
+	/*! @brief Check if is the list empty 
+	 *	@return Return true if the list is empty, else return false
+	 */
+
+	template <typename T>
+		bool list<T>::empty(){
+			return (head->next == tail and tail->prev == head);
 		}
 
-		return *this;
-	}
-	template <class T>
-	size_type list<T>::size() const
-	{
-		return this->length;
-	}
+	// [IV] MODIFIERS 
 
-	template <class T>
-	void list<T>::clear()
-	{
-		erase(begin(), end());
-		this->length = 0;
-	}
+	/*! @brief Clear the list */
 
-	template <class T>
-	bool list<T>::empty()
-	{
-		bool cond1 = this->head->next == this->tail;
-		bool cond2 = this->tail->prev == this->head;
-		return cond1 and cond2;
-	}
-
-	template <class T>
-	void list<T>::push_front( const T &value )
-	{		
-		Node *push = new Node(value, this->head, this->head->next);
-		this->head->next->prev = push;
-		this->head->next = push;
-		this->length++;
-	}
-
-	template <class T>
-	void list<T>::push_back( const T &value )
-	{
-		Node *push = new Node(value, this->tail->prev, this->tail);
-		this->tail->prev->next = push;
-		this->tail->prev = push;
-		this->length++;
-	}
-
-	template <class T>
-	void list<T>::pop_back()
-	{
-		erase( this->head->next );
-	}
-
-	template <class T>
-	void list<T>::pop_front()
-	{
-		erase( this->tail->prev );
-	}
-
-	template <class T>
-	const T &list<T>::back() const
-	{		
-		return this->tail->prev->data;
-	}
-
-	template <class T>
-	const T &list<T>::front() const
-	{
-		return this->head->next->data;
-	}
-
-	template <class T>
-	void list<T>::assign( const T &value )
-	{
-		for( auto i = begin(); i != end(); i++ ){
-			*i = value;
+	template <typename T>
+		void list<T>::clear(){
+			
+			erase(begin(),end());
+			length = 0;
 		}	
-	}
+	
 
-	template <class T>
-	bool list<T>::operator==( const list &rhs )
-	{
-		if( this->length != rhs.length ) return false;
+	/*! @brief Returns a constant reference to the first element of the list 
+	 *	@return The value of first element in the list
+	 */	
 
-		for( int i = 0; i < length; i++ )
-		{
-			if( *(cbegin() + i) != *(rhs.cbegin() + i) ) return false;
+	template <typename T>
+		const T & list<T>::front() const{
+			if(empty())
+				throw std::out_of_range("The list is empty!");
+			return head->next->data;
 		}
 
-		return true;
-	}
-	template <class T>
-	bool list<T>::operator!=( const list &rhs )
-	{
-		if ((*this) == rhs) return false;
-		return true;
-	}
+	
 
-	template <class T>
-	typename list<T>::iterator list<T>::insert(	list<T>::iterator pos, const T &value )
-	{
-		typename list<T>::Node* inserted =
-			new typename list<T>::Node(value, pos.current->prev, pos.current);
+	/*! @brief Returns a constant reference to the last element of the list 
+	 *	@return The value of last element in the list
+	 */
+
+	template <typename T>
+		const T & list<T>::back() const{
+			if(empty())
+				throw std::out_of_range("The list is empty!");
+			return tail->prev->data;
+		}
+
+	
+	/**
+	 * @brief Inserts value before itr position
+	 * 
+	 * @tparam T 
+	 * @param itr 
+	 * @param value 
+	 * @return list<T>::iterator 
+	 */
+	template <typename T>
+	typename list<T>::iterator list<T>::insert (typename list<T>::iterator itr, const T & value ){
+
+		typename list<T>::Node* temp =
+			new typename list<T>::Node(value,itr.current->prev,itr.current);
 		length++;
-		pos.current->prev->next = inserted;
-		pos.current->prev = inserted;
-		return inserted;
+		itr.current->prev->next = temp;
+		itr.current->prev = temp;
+		return temp;
+	}	
+
+	/**
+	 * @brief Inserts the initializer_list's elements before itr position
+	 * 
+	 * @tparam T 
+	 * @param pos 
+	 * @param ilist 
+	 * @return list<T>::iterator 
+	 */
+	template <typename T>
+	typename list<T>::iterator list<T>::insert( const_iterator pos, std::initializer_list<T> ilist ){
+			
+		list<T>::iterator itr;
+		for (auto i = ilist.begin(); i < ilist.end(); ++i) {
+				itr = list<T>::insert(pos,*i);	
+		}
+		if(itr == begin()) return itr;
+		int size = ilist.size();
+		return itr+1-size;
 	}
 
-	template <class T>
-	template <class InitIt>
-	typename list<T>::iterator list<T>::insert(	list<T>::iterator pos, InitIt first, InitIt last )
-	{
-		list<T>::iterator itr(pos);		
-		unsigned long int count = 0;
+	
+	/**
+	 * @brief Inserts the elements in the [first,last) range before itr position
+	 * 
+	 * @tparam T 
+	 * @tparam InItr 
+	 * @param pos 
+	 * @param first 
+	 * @param last 
+	 * @return list<T>::iterator 
+	 */
+	template <typename T>
+	template <typename InItr>	
+	typename list<T>::iterator list<T>::insert(iterator pos, InItr first, InItr last){
 
-		for( auto i = first; i != last; ++i ){
-			itr = list<T>::insert(pos, *i);
-			count++;
+		list<T>::iterator itr;
+		int size = 0;
+		for (auto i = first; i != last; ++i) {
+			itr = list<T>::insert(pos,*i);	
+			size++;
 		}
-
-		if( itr == begin() ){
-			return itr;
-		} else {
-			return itr - count + 1;
-		}
+		if(itr == begin()) return itr;
+		return itr+1-size;
 	}
 
-	template <class T>
-	typename list<T>::iterator list<T>::insert(	list<T>::const_iterator pos, std::initializer_list<T> ilist )
-	{
-		list<T>::iterator itr;	
-
-		for( auto i = ilist.begin(); i < ilist.end(); ++i ){
-			itr = list<T>::insert(pos, *i);
-		}
-
-		if( itr == begin() ){
-			return itr;
-		} else {
-			return itr - ilist.size() + 1;
-		}
+	/*! @brief Insert a element in the beggining of list
+	 * 	@param The value who's will be inserted
+	 */
+	template <typename T>
+	void list<T>::push_front(const T& value){
+		Node *push = new Node(value,head,head->next);
+		head->next->prev = push;
+		head->next = push;
+		length++;
 	}
 
-	template <class T>
-	typename list<T>::iterator list<T>::erase( list::iterator pos )
-	{
-		auto ret = list<T>::iterator(pos.current->next);
+	/*! @brief Insert a element in the end of list
+	 * 	@param The value who's will be inserted
+	 */
+	template <typename T>
+	void list<T>::push_back( const T & value ){
 
-		if( pos != end() ){
+		Node *push = new Node(value,tail->prev,tail);
+		tail->prev->next = push;
+		tail->prev = push;
+		length++;
+	}
+
+	/*! @brief Remove a element in the beggining of list
+	 * 	@param The value who's will be inserted
+	 */
+	template <typename T>	
+	void list<T>::pop_front( )
+	{
+		if(empty())
+			throw("pop_front() cannot remove elements from a empty list");
+		erase(begin());
+	}
+
+	/*! @brief Remove a element in the end of list
+	 * 	@param The value who's will be inserted
+	 */	 
+	template <typename T>	
+	void list<T>::pop_back( ){
+		if(empty())
+			throw std::out_of_range("pop_back() cannot remove elements from a empty list");
+		erase(ls::list<T>::iterator(tail->prev));
+	}
+
+
+	/*! @brief Returns a reference to the object pointed by iterator
+	 * 	@return The value who's iterator points
+	 */
+	template <typename T>
+	T & list<T>::iterator::operator* ( ){
+		return this->current->data;
+	}
+	
+	/*! @brief Increase the iterator to the next position in list (++it)
+	 *	@return The iterator
+	 */
+	template <typename T>
+	typename list<T>::iterator & list<T>::iterator::operator++( ){
+		this->current = this->current->next;
+		return *this;
+	}
+	
+	/*! @brief Decrease the iterator to the next position in list (--it)
+	 *	@return The iterator
+	 */
+	template <typename T>
+	typename list<T>::iterator & list<T>::iterator::operator--( ){
+		this->current = this->current->prev;
+		if (this->current == nullptr){
+			throw std::out_of_range("Iterator went out of bounds!");
+		}
+		return *this;
+	}
+	
+	/*! @brief Decrease the iterator to the next position in list (it--)
+	 *	@return The iterator
+	 */
+	template <typename T>
+	typename list<T>::iterator list<T>::iterator::operator--( int ){
+		auto temp = *this;
+		this->current = this->current->prev;
+
+		if (this->current == nullptr){
+			throw std::out_of_range("Iterator went out of bounds!");
+		}
+		return temp;
+	}
+
+	/*! @brief Increase the iterator to the next position in list (it++)
+	 *	@return The iterator
+	 */
+
+	template <typename T>
+	typename list<T>::iterator list<T>::iterator::operator++( int ){
+		auto temp = *this;
+		this->current = this->current->next;
+		if (this->current == nullptr){
+			throw std::out_of_range("Iterator went out of bounds!");
+		}
+		return temp;
+	}
+
+	/*! @brief Return true if the iterators are reference to diferent parts of list
+	 * 	@return Return true if the iterators are reference to diferent parts of list, else, return false
+	 */
+	template <typename T>
+		bool list<T>::const_iterator::operator!= ( const const_iterator & rhs ) const{
+
+			return this->current != rhs.current;
+	}
+
+	/*! @brief Return true if the iterators are reference to equal parts of list
+	 * 	@return Return true if the iterators are reference to equal parts of list, else, return false
+	 */	
+	template <typename T>
+		bool list<T>::const_iterator::operator== ( const const_iterator & rhs ) const{
+
+			return this->current == rhs.current;
+	}
+
+	/*! @brief Remove a element in param "pos" position
+	 *  @params pos Iterator who's point to the element to be removed
+	 *  @return Iterator to the element next to pos
+	 */
+	template <typename T>
+	 typename list<T>::iterator list<T>::erase (list<T>::iterator pos){
+			
+		auto ret = list<T>::iterator(pos.current->next); 
+		 if(pos != end()){
+
 			pos.current->next->prev = pos.current->prev;
 			pos.current->prev->next = pos.current->next;
 			delete pos.current;
-		}
-		length--;
-
-		return ret;
+		 }
+		 length--;
+		 return ret;
 	}
 
-	template <class T>
-	typename list<T>::iterator list<T>::erase( list<T>::iterator first, list<T>::iterator last )
-	{
-		list<T>::iterator itr = erase(first);
+	/*! @brief Remove the elements in the interval [first, last)
+	 *	@param first Iterator to the first element who will be removed
+	 *	@param last Iterator to the element after the last who will be removed
+	 * 	@return 
+	 */
 
-		while( itr != last ){
+	template <typename T>
+	 typename list<T>::iterator list<T>::erase 
+	 (list<T>::iterator first, list<T>::iterator last){
+		
+		 list<T>::iterator itr = erase(first);
+		 while(itr != last){
 			itr = erase(itr);
-		}
-
+		 }
 		return itr;
+	 }
+
+	/*! @brief Replace the content of the list with copies of the param "value"
+	 * 	@param value Value who will replace the elements
+	 * 	@param count The final range of process of replacement
+	 */
+
+	template <typename T>
+	void list<T>::assign(const T& value ){
+		
+		for (int i = 0; i < length; ++i) {
+			list<T>::insert(list<T>::begin(),value);
+		}
 	}
 
-	template <class T>
-	void list<T>::assign( T first, T last )
-	{
-		if( this->length != 0 )
-			list<T>::clear();
+	/*! @brief Replace the content of the list with copies of elements in the range [first, last)
+	 *	@param first Iterator to the first value in the range
+	 *	@param last Iteratr to the element after the last value in the range
+	 */
+	
+	template <typename T>
+	template <typename InItr >
+	void list<T>::assign( InItr first, InItr last ){
+		if(length != 0) list<T>::clear(); 
+		
+		insert(begin(),first,last);
+	} 
 
-		insert(begin(), first, last);
+	/*! @brief Replace the content of the list with a initializer list
+	 *	@param ilist The inizializer list who will replace the elements of the list
+	 */
+
+	template <typename T>
+	void list<T>::assign( std::initializer_list<T> ilist ){
+
+		if(length != 0) list<T>::clear(); 
+
+		insert(begin(),ilist.begin(),ilist.end());
 	}
+	
+	/**
+	 * @brief List Operator ==
+	 * 
+	 * @tparam T 
+	 * @param lhs 
+	 * @param rhs 
+	 * @return true 
+	 * @return false 
+	 */
+	template <typename T>
+	bool operator==(const list<T> & lhs,const list<T>& rhs){
 
-	template <class T>
-	void list<T>::assign( std::initializer_list<T> ilist )
-	{	
-		if( this->length != 0 )
-			list<T>::clear();	
+		if(lhs.size() != rhs.size()) return false;
+		
+		auto ritr = rhs.cbegin();
+		for (auto itr = lhs.cbegin(); itr != lhs.cend(); ++itr, ++ritr) {
+			if(*itr != *ritr) return false;
+		}
+		return true;
+	}
+	
+	/**
+	 * @brief List Operator !=
+	 * 
+	 * @tparam T 
+	 * @param lhs 
+	 * @param rhs 
+	 * @return true 
+	 * @return false 
+	 */
+	template <typename T>
+	bool operator!=(const list<T> & lhs,const list<T>& rhs){
 
-		insert(begin(), ilist.begin(), ilist.end());
+		if(lhs.size() != rhs.size()) return true;
+		
+		auto ritr = rhs.cbegin();
+		for (auto itr = lhs.cbegin(); itr != lhs.cend(); ++itr, ++ritr) {
+			if(*itr != *ritr) return true;
+		}
+		return false;
 	}
 }

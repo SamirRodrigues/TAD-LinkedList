@@ -3,7 +3,10 @@
         "xlocale": "cpp",
         "xstring": "cpp",
         "xutility": "cpp",
-        "xtr1common": "cpp"
+        "xtr1common": "cpp",
+        "*.tcc": "cpp",
+        "string": "cpp",
+        "string_view": "cpp"
     },
     "C_Cpp.errorSquiggles": "Enabled"
 }
