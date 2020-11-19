@@ -64,14 +64,14 @@ namespace ls
 	 * @param first 
 	 * @param last 
 	 */
-	/*
+	
 	template <class T>
 	template <typename InputIt>	
 	list<T>::list(InputIt first, InputIt last): list<T>::list() 
 	{
 		assign(first, last);	
 	}
-	*/
+	
 	
 	/**
 	 * @brief Construct a new list<T>::list object
@@ -649,8 +649,8 @@ namespace ls
 	{
 		if(lhs.size() != rhs.size()) { return false };
 		
-		auto ritr = rhs.cbegin();
-		for (auto itr = lhs.cbegin(); itr != lhs.cend(); ++itr, ++ritr) 
+		auto ritr = rhs.begin();
+		for (auto itr = lhs.begin(); itr != lhs.end(); ++itr, ++ritr) 
 		{
 			if(*itr != *ritr) { return false; }
 		}
@@ -671,15 +671,21 @@ namespace ls
 	{
 		if(lhs.size() != rhs.size()) { return true; }
 		
-		auto ritr = rhs.cbegin();
-		for (auto itr = lhs.cbegin(); itr != lhs.cend(); ++itr, ++ritr) 
+		auto ritr = rhs.begin();
+		for (auto itr = lhs.begin(); itr != lhs.end(); ++itr, ++ritr) 
 		{
 			if(*itr != *ritr) { return true; }
 		}
 		return false;
 	}
 
-
+	/**
+	 * @brief Operator+
+	 * 
+	 * @tparam T 
+	 * @param a 
+	 * @return list<T>::iterator 
+	 */
 	template <typename T>
 	typename list<T>::iterator list<T>::iterator::operator+ (int a){
 	
@@ -695,6 +701,13 @@ namespace ls
 		return copy;
 	}
 
+	/**
+	 * @brief Operator-
+	 * 
+	 * @tparam T 
+	 * @param a 
+	 * @return list<T>::iterator 
+	 */
 	template <typename T>
 	typename list<T>::iterator list<T>::iterator::operator- (int a){
 		
@@ -710,6 +723,13 @@ namespace ls
 		return copy;
 	}
 
+	/**
+	 * @brief Operator-
+	 * 
+	 * @tparam T 
+	 * @param a 
+	 * @return list<T>::const_iterator& 
+	 */
 	template <typename T>
 	typename list<T>::const_iterator & list<T>::const_iterator::operator- (int a){
 

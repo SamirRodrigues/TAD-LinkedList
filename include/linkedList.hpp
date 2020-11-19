@@ -80,6 +80,7 @@ namespace ls
 
 		list(void);
 		explicit list(size_type count);		
+		template <class InputIt>
 		list(InputIt first, InputIt last);
 		list( const list& );				
 		list( std::initializer_list<T> ilist );
