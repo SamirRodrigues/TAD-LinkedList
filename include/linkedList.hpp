@@ -125,9 +125,9 @@ namespace ls
 		iterator erase( iterator pos );
 		iterator erase( iterator first, iterator last );
 		
-		template <typename T>
+		
 		bool operator==(const list<T>& lhs,const list<T>& rhs);
-		template <typename T>
+		
 		bool operator!=(const list<T>& lhs,const list<T>& rhs);
 	};
 

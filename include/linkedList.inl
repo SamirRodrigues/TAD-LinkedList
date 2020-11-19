@@ -52,7 +52,8 @@ namespace ls
 	template <typename T>
 	list<T>::list(size_type count): list<T>::list() 
 	{
-		assign(count,0);	
+		length = count;
+		assign(0);	
 	}
 
 	
@@ -359,7 +360,7 @@ namespace ls
 			itr = list<T>::insert(pos,*i);	
 		}
 
-		if(itr == begin()) { return itr };
+		if(itr == begin()) { return itr; }
 
 		int size = ilist.size();
 		return itr+1-size;
@@ -388,7 +389,7 @@ namespace ls
 			size++;
 		}
 
-		if(itr == begin()) {return itr};
+		if(itr == begin()) {return itr;}
 
 		return itr+1-size;
 	}
@@ -647,7 +648,7 @@ namespace ls
 	template <typename T>
 	bool operator==(const list<T> & lhs,const list<T>& rhs)
 	{
-		if(lhs.size() != rhs.size()) { return false };
+		if(lhs.size() != rhs.size()) { return false; }
 		
 		auto ritr = rhs.begin();
 		for (auto itr = lhs.begin(); itr != lhs.end(); ++itr, ++ritr) 
