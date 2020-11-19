@@ -91,9 +91,9 @@ namespace ls
 		// [II] ITERATORS
 	
 		iterator begin();	
-		const_iterator begin( ) const;				
+		const_iterator cbegin( ) const;				
 		iterator end( );	
-		const_iterator end( ) const;
+		const_iterator cend( ) const;
 
 		// [III] Capacity 
 				
@@ -126,10 +126,12 @@ namespace ls
 		iterator erase( iterator first, iterator last );
 		
 		
-		bool operator==(const list<T>& lhs,const list<T>& rhs);
 		
-		bool operator!=(const list<T>& lhs,const list<T>& rhs);
 	};
+	template <typename T>
+	bool operator==(const list<T>& lhs,const list<T>& rhs);	
+	template <typename T>	
+	bool operator!=(const list<T>& lhs,const list<T>& rhs);
 
 }
 

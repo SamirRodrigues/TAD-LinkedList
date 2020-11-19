@@ -96,7 +96,7 @@ namespace ls
 	template <typename T>
 	list<T>& list<T>::operator= ( const list<T> & other )
 	{			
-		assign(other.begin(),other.end());
+		assign(other.cbegin(), other.cend());
 		return *this;	
 	}
 
@@ -148,7 +148,7 @@ namespace ls
 	 * @return ls::list<T>::const_iterator 
 	 */
 	template <typename T>
-	typename ls::list<T>::const_iterator ls::list<T>::begin() const
+	typename ls::list<T>::const_iterator ls::list<T>::cbegin() const
 	{
 		return ls::list<T>::const_iterator(head->next);
 	}
@@ -172,7 +172,7 @@ namespace ls
 	 * @return ls::list<T>::const_iterator 
 	 */
 	template <typename T>
-	typename ls::list<T>::const_iterator ls::list<T>::end() const
+	typename ls::list<T>::const_iterator ls::list<T>::cend() const
 	{
 		return ls::list<T>::const_iterator(tail);
 	}
@@ -599,7 +599,7 @@ namespace ls
 	template <typename T>
 	void list<T>::assign(const T& value )
 	{		
-		for (int i = 0; i < length; ++i)
+		for (int i = 0; i < (int)length; ++i)
 		{
 			list<T>::insert(list<T>::begin(),value);
 		}
@@ -646,12 +646,12 @@ namespace ls
 	 * @return false 
 	 */
 	template <typename T>
-	bool operator==(const list<T> & lhs,const list<T>& rhs)
+	bool operator==(const list<T> & lhs, const list<T>& rhs)
 	{
 		if(lhs.size() != rhs.size()) { return false; }
 		
-		auto ritr = rhs.begin();
-		for (auto itr = lhs.begin(); itr != lhs.end(); ++itr, ++ritr) 
+		auto ritr = rhs.cbegin();
+		for (auto itr = lhs.cbegin(); itr != lhs.cend(); ++itr, ++ritr) 
 		{
 			if(*itr != *ritr) { return false; }
 		}
@@ -672,8 +672,8 @@ namespace ls
 	{
 		if(lhs.size() != rhs.size()) { return true; }
 		
-		auto ritr = rhs.begin();
-		for (auto itr = lhs.begin(); itr != lhs.end(); ++itr, ++ritr) 
+		auto ritr = rhs.cbegin();
+		for (auto itr = lhs.cbegin(); itr != lhs.cend(); ++itr, ++ritr) 
 		{
 			if(*itr != *ritr) { return true; }
 		}
