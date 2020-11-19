@@ -4,16 +4,8 @@
 
 #include "../include/tam.hpp"
 #include "../include/linkedList.hpp"
-/*
-template <typename T>
-void print_list(ls::list<T> A )
-{
-	std::cout << ">>> Current List: [ ";
-	ls::copy( A.begin(), A.end(), std::ostream_iterator< int >( std::cout, " " ) );
-	std::cout << "]\n";
-	std::cout << "\n";
-}
-*/
+
+
 namespace client
 {
 	template <class T>
@@ -42,94 +34,7 @@ namespace client
 
 int main(int argc, char *argv[])
 {
-	/*
-	std::cout << "Chamando list() " << std::endl;
-	ls::list<int> lista;
-	lista.push_back(6);
-	lista.push_back(1);
-	lista.push_back(2);
-	lista.push_back(3);
-	lista.push_front(5);
-
-	std::cout << "Teste push_front e push_back " << std::endl;
-	print_list(lista);
-	std::cout << std::endl;
-
-	std::cout << "Teste insert initializer list" << std::endl;
-	auto x = lista.insert(lista.begin(),{-1,-2,-3,-4,-5});
-	print_list(lista);
-
-	std::cout <<  std::endl;
-	std::cout << "Teste retorno insert: initializer list: " << *x << std::endl;
 	
-	std::cout << "Teste insert [first,last) " << std::endl;
-	print_list(lista);
-	std::cout << "Teste retorno insert [first,last): " << *x << std::endl;
-	
-	std::cout << "Teste size: " << lista.size() << std::endl; 
-
-	x = lista.erase(lista.begin());
-	std::cout << "Teste erase pos "<< *x << std::endl;
-	std::cout <<  std::endl;
-
-	print_list(lista);
-
-	x = lista.erase(lista.begin()+3,lista.end());
-	std::cout << "Teste erase  [first,last) " << std::endl;
-	print_list(lista);
-	//lista.clear();
-	//std::cout << "list size after clear : " << lista.size() << std::endl;
-	
-	
-	std::cout << "Teste constructor  initializer list " << std::endl;
-	ls::list<int> lista2{{1,2,3,4}};
-	print_list(lista2);
-	std::cout << "list2 initializer list size : " << lista2.size() << std::endl;
-
-	print_list(lista2);
-	lista2.assign(5,7);
-	std::cout << "list2 assign: "  << std::endl;
-	
-	print_list(lista2);	
-
-	lista2.assign(lista.begin(),lista.end());
-	
-	std::cout << "list2 assign [first,last): "  << std::endl;
-	
-	print_list(lista2);
-
-	lista2.assign({1,2,3,4,5});
-	
-	std::cout << "list2 assign initializer list: "  << std::endl;
-	print_list(lista2);	
-
-	ls::list<int> lista3 = lista2;
-	std::cout << "list3 assignment operator: "  << std::endl;
-	print_list(lista3);
-	
-	ls::list<int> lista4(lista3);
-	
-	std::cout << "list4 copy constructor: "  << std::endl;
-	print_list(lista4);
-	
-	std::cout << "list3 size : " << lista3.size() << std::endl;
-	std::cout << "list4 size : " << lista4.size() << std::endl;
-
-	std::cout << "Teste operator lista4 == lista3 " << (lista4 == lista3) << std::endl;
-	std::cout << "Teste operator lista == lista3 " << (lista == lista3) << std::endl;
-	std::cout << "Teste operator lista4 != lista3 " << (lista4 != lista3) << std::endl;
-
-	std::cout << "Teste constructor explicit list(size_type) " << std::endl;
-	ls::list<int> lista5(5);
-	print_list(lista5);	
-	
-	std::cout << "Before pop front and back " << std::endl;
-	print_list(lista3);	
-	std::cout << "Teste pop front and back " << std::endl;
-	lista3.pop_front();
-	lista3.pop_back();
-	print_list(lista3);
-	*/
 
 	// Special members tests 
 	{
@@ -172,7 +77,7 @@ int main(int argc, char *argv[])
 			std::cout << "SizeList elements: ";
 			client::print_it( SizeList, ' ' );
 		}
-		/*
+		
 		{
 			tam::bold("Copy constructor from a simple array"); std::cout << std::endl;
 
@@ -182,7 +87,7 @@ int main(int argc, char *argv[])
 			ls::list<int> cList( Vet, Vet+10 );
 			client::print_it( cList, ' ' );
 		}
-		*/
+		
 		{
 			tam::bold("Copy constructor from another sc::vector"); std::cout << std::endl;
 
@@ -261,6 +166,204 @@ int main(int argc, char *argv[])
 			client::print_it(initList, ' ');
 		}
 
+		tam::div();
+	}
+
+	// Iterators methods tests
+	{
+		tam::title("Iterators methods tests");		 std::cout << std::endl;
+		{		
+		tam::bold("Begin & End methods"); std::cout << std::endl;
+		ls::list<int> l(10);
+		client::populate(l);
+		std::cout << "for loop to print elements in the vector\n";
+
+		std::cout << std::endl;
+		std::cout << "for( auto &it : V ){ std::cout << it << ' '; }" << std::endl;		
+		for( auto &it : l ){ std::cout << it << ' '; }
+
+		std::cout << std::endl << std::endl;
+		std::cout << "begin/end:" << std::endl;
+		std::cout << "for( auto it = V.begin(); it != V.end(); it++ ){ std::cout << *it << ' '; }" << std::endl;
+		for( auto it = l.begin(); it != l.end(); it++ ){ std::cout << *it << ' '; }
+
+		std::cout << std::endl << std::endl;
+		std::cout << "Const begin/end: \n(if we try to change a value, it get's a compilation error)\n";
+		std::cout << "for( auto it = V.cbegin(); it != V.cend(); ++it ){ std::cout << *it << ' '; }" << std::endl;
+		for( auto it = l.cbegin(); it != l.cend(); ++it ){ std::cout << *it << ' '; }
+		
+		std::cout << std::endl;
+
+		tam::div();
+	}
+	
+	// Capacity methods tests
+	{
+		tam::title("Capacity methods tests"); std::cout << std::endl;
+		{
+			tam::bold("Empty method test"); std::cout << std::endl;
+			// Declaration
+			ls::list<int> l(10);
+			client::populate(l);
+			std::cout << "created list l with 10 elements\n";
+			ls::list<int> l_emp;	
+			std::cout << "created list l_emp with 0 elements\n";
+
+			// tests
+			std::cout << "Is l empty? ";
+			std::cout << ( l.empty() ? "Yes\n" : "No\n" );
+			std::cout << "Is l_emp empty? ";
+			std::cout << ( l_emp.empty() ? "Yes\n" : "No\n" );
+		}
+
+		{
+			tam::bold("Size method test"); std::cout << std::endl;
+			ls::list<int> l(10);
+			client::populate(l);
+			std::cout << "list l has " << l.size() << " elements\n";
+
+			ls::list<int> l2(40);
+			std::cout << "list l2 created\n";
+			client::populate(l2);
+			std::cout << "list l2 has " << l2.size() << " elements\n";
+		}
+		
+		tam::div();
+	}
+
+	// Modifiers methods tests
+	{
+		tam::title("Modifiers methods tests"); std::cout << std::endl;
+
+		{
+			tam::bold("Clear method test"); std::cout << std::endl;
+			// Declaration
+			ls::list<int> cList(10);
+			client::populate(cList);
+			std::cout << "list cList created and populated ~" << &cList;	
+			std::cout << std::endl << "cList elements: ";
+			client::print_it(cList, ' ');
+
+			std::cout << "Running clear() on cList\n";
+			cList.clear();
+			std::cout << "cList.size() = " << cList.size() << std::endl;
+		}
+
+		{
+			tam::bold("Push_front & push_back method test"); std::cout << std::endl;
+			ls::list<int> pList = {2, 3, 4};
+			std::cout << "list pList elements: ";
+			client::print_it(pList, ' ');
+
+			pList.push_front(-20);
+			pList.push_back(99);
+
+			std::cout << "After push_back & push_front: ";
+			client::print_it(pList, ' ');
+
+		}
+
+		{
+			tam::bold("Pop_front & pop_backmethod test"); std::cout << std::endl;
+			// Declaration
+			ls::list<int> pList = { 2, 2, 2 };
+			std::cout << "list pList elements: ";
+			client::print_it(pList, ' ');
+
+			pList.pop_back();
+			pList.pop_front();
+
+			std::cout << "after pop_front & pop_back: ";
+			client::print_it(pList, ' ');
+		}
+
+		{
+			tam::bold("Insert methods test"); std::cout << std::endl;
+
+			// Declaration
+			std::cout << "Creating iVec(10)\n";
+			ls::list<int> iList(10);
+			std::cout << "Populating iList with random elements...\n";
+			client::populate(iList);
+			std::cout<< "iList =";
+			client::print_it( iList, ' ' );
+
+			std::cout << "iList.insert( iList.begin(), 10 );\n";
+			iList.insert( iList.begin(), 10 );
+			client::print_it( iList, ' ' );
+
+			std::cout << "\nCreating Vet[] = { 10, 3, 4, 2, 10, 11 };\n";
+			int Vet[] = { 10, 3, 4, 2, 10, 11 };
+			
+			std::cout << "iList.insert( iList.begin(), std::begin(Vet), std::end(Vet) );\n";
+			iList.insert( iList.begin(), std::begin(Vet), std::end(Vet) );
+			client::print_it( iList, ' ' );
+
+			std::cout << "iList.insert( iList.begin(), { 10, 20, 30, 40, 50, 60 } );\n";
+			iList.insert( iList.begin(), { 10, 20, 30, 40, 50, 60 } );
+			client::print_it( iList, ' ' ); 
+		}
+
+		{
+			tam::bold("Assign method test"); std::cout << std::endl;
+
+			ls::list<int> iList(10);
+			client::populate(iList);
+			std::cout << "iList elements: ";
+			client::print_it(iList, ' ');
+
+			ls::list<int> aList(20);
+			client::populate(aList);
+			std::cout << "aList elements: ";
+			client::print_it(aList, ' ');
+						
+
+			std::cout << "\niList.assign(8, 10) = ";
+			iList.assign(8, 10);
+			client::print_it(iList, ' ');			
+
+			std::cout << "iList.assign({ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20 }) = ";
+			iList.assign({ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20 });
+			client::print_it(iList, ' ');
+
+			std::cout << "iList.assign(aList.begin(), aList.end()) = ";
+			iList.assign(aList.begin(), aList.end());
+			client::print_it(iList, ' ');
+		}
+
+		{
+			tam::bold("Erase method with iterator"); std::cout << std::endl;
+			ls::list<int> iList(10);
+			client::populate(iList);
+			
+			std::cout << "Before elements: ";
+			client::print_it(iList, ' ');
+			
+			std::cout << "\niList.erase(iList.end())\n" << std::endl;
+			iList.erase(iList.end());
+			client::print_it(iList, ' ');
+			std::cout << "iList.erase( iList.begin(), iList.end() - 3)" << std::endl;
+			iList.erase( iList.begin(), iList.end() - 3);
+			client::print_it(iList, ' ');
+			
+			std::cout << "\nAfter elements: ";
+			client::print_it(iList, ' ');
+		}
+		tam::div();
+	}
+
+	// Element access methods tests
+	{	
+		tam::title("Element access methods tests"); std::cout << std::endl;
+		{
+			tam::bold("Front and back method test"); std::cout << std::endl;
+			ls::list<int> list(10);
+			client::populate(list);
+			std::cout << "list elements: ";
+			client::print_it(list, ' ');
+			std::cout << "list.front() = " << list.front() << std::endl;
+			std::cout << "list.back() = " << list.back() << std::endl;
+		}
 		tam::div();
 	}
 
