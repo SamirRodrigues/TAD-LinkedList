@@ -22,3 +22,12 @@ This project was proposed by professor Selan Rodrigues from UFRN, for EDB1 mater
 1. The tests do not show the errors, if there are any, it is necessary to view them manually, one by one. 
 2. The use of this code is free, for any purpose, please credit if you use them.
 3. Project Authors Samir Rodrigues and Italo Lima. (gits @SamirRodrigues & @italo-ce)
+4. Samir Rodrigues was responsable for the implementtion of the iterator class (const_iterator is include) and Italo Lima was responsable for the the implementation of the list class. (Although, both team members constantly participated in the implementation of all build stages) 
+5. functions that are not working: 
+        void assign( InputIt first, InputIt last );
+        void assign ( size_type count, const T& value );
+        list & operator= ( const list & );
+        const T & operator* ( ) const;
+            we believe that all the function that derives from the operator* are not working for some unknown reason... still working to fix it (
+            help is accepted)
+6. 

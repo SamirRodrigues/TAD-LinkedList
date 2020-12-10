@@ -40,7 +40,13 @@ namespace ls
 	template <typename T>
 	list<T>::list( std::initializer_list<T> ilist ): list<T>::list()
 	{
-		insert(begin(),ilist.begin(),ilist.end());
+
+		for(auto i = ilist.begin(); i != ilist.end(); i++){
+			
+			push_back(*i);
+		
+		}
+
 	}
 
 	/**
@@ -52,8 +58,11 @@ namespace ls
 	template <typename T>
 	list<T>::list(size_type count): list<T>::list() 
 	{
-		length = count;
-		assign(0);	
+		for (size_t i = 0; i < count; i++)
+		{
+			push_back(count);
+		}
+		
 	}
 
 	
@@ -66,11 +75,19 @@ namespace ls
 	 * @param last 
 	 */
 	
-	template <class T>
+	template <typename T>
 	template <typename InputIt>	
 	list<T>::list(InputIt first, InputIt last): list<T>::list() 
 	{
-		assign(first, last);	
+
+		head->next = tail;
+		tail->prev = head;
+		
+		while(first != last)
+		{
+			push_back(*first);
+			first++;
+		}	
 	}
 	
 	
@@ -80,11 +97,21 @@ namespace ls
 	 * @tparam T 
 	 * @param other 
 	 */
+	
 	template <typename T>
 	list<T>::list( const list<T> & other ): list<T>::list()
 	{
-		*this = other;
+			
+		head->next = tail;
+		tail->prev = head;
+
+		for (auto i = other.cbegin(); i != other.cend(); i++)
+		{
+			push_back(*i);
+		}
+				
 	} 
+
 	
 	/**
 	 * @brief Operator=
@@ -95,9 +122,11 @@ namespace ls
 	 */
 	template <typename T>
 	list<T>& list<T>::operator= ( const list<T> & other )
-	{			
+	{	
+		
 		assign(other.cbegin(), other.cend());
 		return *this;	
+		
 	}
 
 	/**
@@ -122,9 +151,16 @@ namespace ls
 	template <typename T>
 	list<T>::~list()
 	{
-		clear();
+		Node *current = head;
+		while (current)
+		{
+			Node *temp = current->next;
+			current = current->next;
+			delete temp;
+			head = current;
+		}
+		current = NULL;
 		delete head;
-		delete tail;
 	}
 
 	// [II] ITERATORS 
@@ -136,9 +172,9 @@ namespace ls
 	 * @return ls::list<T>::iterator 
 	 */
 	template <typename T>
-	typename ls::list<T>::iterator ls::list<T>::begin()
+	typename list<T>::iterator list<T>::begin()
 	{
-		return ls::list<T>::iterator(head->next);
+		return head->next;
 	}
 
 	/**
@@ -148,9 +184,9 @@ namespace ls
 	 * @return ls::list<T>::const_iterator 
 	 */
 	template <typename T>
-	typename ls::list<T>::const_iterator ls::list<T>::cbegin() const
+	typename list<T>::const_iterator list<T>::cbegin() const
 	{
-		return ls::list<T>::const_iterator(head->next);
+		return head->next;
 	}
 
 	/**
@@ -160,9 +196,9 @@ namespace ls
 	 * @return ls::list<T>::iterator 
 	 */
 	template <typename T>
-	typename ls::list<T>::iterator ls::list<T>::end()
+	typename list<T>::iterator list<T>::end()
 	{
-		return ls::list<T>::iterator(tail);
+		return tail;
 	}
 
 	/**
@@ -172,9 +208,9 @@ namespace ls
 	 * @return ls::list<T>::const_iterator 
 	 */
 	template <typename T>
-	typename ls::list<T>::const_iterator ls::list<T>::cend() const
+	typename list<T>::const_iterator list<T>::cend() const
 	{
-		return ls::list<T>::const_iterator(tail);
+		return tail;
 	}
 
 	/**
@@ -184,7 +220,7 @@ namespace ls
 	 * @return const T& 
 	 */
 	template <typename T>		
-	const T & list<T>::const_iterator::operator* ( ) const
+	T & list<T>::const_iterator::operator* ( )
 	{
 		return this->current->data;
 	}	
@@ -212,7 +248,7 @@ namespace ls
 	template <typename T>		
 	typename list<T>::const_iterator list<T>::const_iterator::operator++ ( int )
 	{	
-		auto temp = *this;	
+		auto temp = this;	
 		this->current = this->current->next;
 		return *temp;
 	}
@@ -277,7 +313,7 @@ namespace ls
 	template <typename T>
 	bool list<T>::empty()
 	{
-		return (head->next == tail and tail->prev == head);
+		return (length == 0);
 	}
 
 	// [IV] MODIFIERS 
@@ -290,35 +326,40 @@ namespace ls
 	template <typename T>
 	void list<T>::clear()
 	{		
-		erase(begin(),end());
 		length = 0;
+		head->next = tail;
+		tail->prev = head;
 	}
 
 	/**
 	 * @brief Returns a constant reference to the first element of the list 
-	 * 
+	 * To do throw std::out_of_range("The list is empty!");
 	 * @tparam T 
 	 * @return const T& 
 	 */
 	template <typename T>
 	const T & list<T>::front() const
-	{
-		if(empty())
+	{	
+		
+		if(length == 0)
 			throw std::out_of_range("The list is empty!");
+		
 		return head->next->data;
 	}
 
 	/**
 	 * @brief Returns a constant reference to the last element of the list 
-	 * 
+	 * To do throw std::out_of_range("The list is empty!");
 	 * @tparam T 
 	 * @return const T& 
 	 */
 	template <typename T>
 	const T & list<T>::back() const
 	{
-		if(empty())
+		
+		if(length == 0)
 			throw std::out_of_range("The list is empty!");
+		
 		return tail->prev->data;
 	}
 
@@ -334,8 +375,7 @@ namespace ls
 	template <typename T>
 	typename list<T>::iterator list<T>::insert (typename list<T>::iterator itr, const T & value )
 	{
-		typename list<T>::Node* temp =
-			new typename list<T>::Node(value,itr.current->prev,itr.current);
+		typename list<T>::Node* temp = new typename list<T>::Node(value,itr.current->prev,itr.current);
 		length++;
 		itr.current->prev->next = temp;
 		itr.current->prev = temp;
@@ -351,13 +391,13 @@ namespace ls
 	 * @return list<T>::iterator 
 	 */
 	template <typename T>
-	typename list<T>::iterator list<T>::insert( const_iterator pos, std::initializer_list<T> ilist )
+	typename list<T>::iterator list<T>::insert( iterator pos, std::initializer_list<T> ilist )
 	{			
 		list<T>::iterator itr;
 
 		for (auto i = ilist.begin(); i < ilist.end(); ++i) 
 		{
-			itr = list<T>::insert(pos,*i);	
+			itr = list<T>::insert(pos, *i);	
 		}
 
 		if(itr == begin()) { return itr; }
@@ -368,7 +408,7 @@ namespace ls
 	
 	/**
 	 * @brief Inserts the elements in the [first,last) range before itr position
-	 * 
+	 * The Implementation is not done
 	 * @tparam T 
 	 * @tparam InItr 
 	 * @param pos 
@@ -376,24 +416,27 @@ namespace ls
 	 * @param last 
 	 * @return list<T>::iterator 
 	 */
+	
 	template <typename T>
-	template <typename InItr>	
+	template <class InItr>	
 	typename list<T>::iterator list<T>::insert(iterator pos, InItr first, InItr last)
 	{
+		
 		list<T>::iterator itr;
 		int size = 0;
 
 		for (auto i = first; i != last; ++i) 
 		{
-			itr = list<T>::insert(pos,*i);	
+			itr = list<T>::insert(pos, *i);	
 			size++;
 		}
 
 		if(itr == begin()) {return itr;}
 
 		return itr+1-size;
+	
 	}
-
+	
 	/**
 	 * @brief Insert a element in the beggining of list
 	 * 
@@ -558,16 +601,16 @@ namespace ls
 	template <typename T>
 	typename list<T>::iterator list<T>::erase (list<T>::iterator pos)
 	{			
-		auto ret = list<T>::iterator(pos.current->next); 
+		auto ref = list<T>::iterator(pos.current->next); 
 		if(pos != end())
 		{
-		pos.current->next->prev = pos.current->prev;
-		pos.current->prev->next = pos.current->next;
-		delete pos.current;
+			pos.current->next->prev = pos.current->prev;
+			pos.current->prev->next = pos.current->next;
+			delete pos.current;
 		}
 
 		length--;
-		return ret;
+		return ref;
 	}
 	
 
@@ -585,7 +628,7 @@ namespace ls
 		list<T>::iterator itr = erase(first);
 		while(itr != last)
 		{
-		itr = erase(itr);
+			itr = erase(itr);
 		}
 		return itr;
 	 }
@@ -597,12 +640,14 @@ namespace ls
 	 * @param value 
 	 */
 	template <typename T>
-	void list<T>::assign(const T& value )
-	{		
-		for (int i = 0; i < (int)length; ++i)
-		{
-			list<T>::insert(list<T>::begin(),value);
+	void list<T>::assign( size_type count, const T& value )
+	{	
+		if(length != 0) { list<T>::clear(); }
+
+		for(size_t i = 0; i < count; i++){
+			push_front(value);
 		}
+		
 	}
 
 	/**
@@ -613,15 +658,22 @@ namespace ls
 	 * @param first 
 	 * @param last 
 	 */
+	
 	template <typename T>
-	template <typename InItr >
-	void list<T>::assign( InItr first, InItr last )
+	template <typename InputIt> 
+	void list<T>::assign( InputIt first, InputIt last )
 	{
-		if(length != 0) { list<T>::clear(); } 
-		
-		insert(begin(),first,last);
+		/*
+		clear();
+		while(first != last)
+		{
+			push_back(*first);
+			first++;
+		}
+		*/	
 	} 
 
+	
 	/**
 	 * @brief Replace the content of the list with a initializer list
 	 * 
@@ -744,4 +796,5 @@ namespace ls
 		}
 		return *this;
 	}
+	
 }

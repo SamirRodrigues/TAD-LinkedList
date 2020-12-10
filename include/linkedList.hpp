@@ -42,7 +42,7 @@ namespace ls
 		{
 			public:
 				const_iterator( ) = default;
-				const T & operator * ( ) const;
+				T & operator* ( );
 				const_iterator & operator ++ ( );		// ++it;
 				const_iterator operator ++ ( int ); 	// it++;
 				const_iterator & operator -- ( ); 		// --it;
@@ -61,7 +61,7 @@ namespace ls
 		class iterator : public const_iterator {
 			public :
 				iterator( ) : const_iterator() { /* Empty */ }
-				const T & operator * ( ) const;
+				//T & operator * ( ) const;
 				T & operator * ( );
 			
 				iterator & operator++ ();
@@ -80,7 +80,7 @@ namespace ls
 
 		list(void);
 		explicit list(size_type count);		
-		template <class InputIt>
+		template <typename InputIt>
 		list(InputIt first, InputIt last);
 		list( const list& );				
 		list( std::initializer_list<T> ilist );
@@ -109,16 +109,16 @@ namespace ls
 		void pop_back( );			
 		const T & back( ) const;				
 		const T & front( ) const;	
-		void assign( const T& value );
+		void assign ( size_type count, const T& value );
 			
 		// [IV-a] Modifiers with iterators
-
-		template < class InItr >
-		void assign( InItr first, InItr last );
+	
+		template < typename InputIt >
+		void assign( InputIt first, InputIt last );
 
 		void assign( std::initializer_list<T> ilist );
 		iterator insert( iterator itr, const T & value );
-		iterator insert( const_iterator pos, std::initializer_list<T> ilist );
+		iterator insert( iterator pos, std::initializer_list<T> ilist );
 		
 		template <typename InItr>	
 		iterator insert(iterator pos, InItr first, InItr last);	
